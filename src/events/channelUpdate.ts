@@ -117,7 +117,7 @@ export default {
                     if (denied.length)
                         detail += `\n<:error:1315248759617228842> **Denied:** \`${denied.join(", ")}\``;
                     if (neutralized.length)
-                        detail += `\n⚪ **Neutral:** \`${neutralized.join(", ")}\``;
+                        detail += `\n<:status_offline:1315248814033997834> **Neutral:** \`${neutralized.join(", ")}\``;
 
                     changes.push(detail);
                 }
@@ -134,7 +134,9 @@ export default {
 
         if (changes.length === 0) return;
 
-        logger.info(`[CHANNEL_UPDATE] ${newChannel.name} (${newChannel.id})`);
+        logger.info(
+            `[CHANNEL_UPDATE] Name: ${newChannel.name} | ID: ${newChannel.id}`,
+        );
 
         const section = new SectionBuilder()
             .addTextDisplayComponents(

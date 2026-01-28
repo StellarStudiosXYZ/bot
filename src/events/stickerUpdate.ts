@@ -24,7 +24,9 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[STICKER_UPDATE] ${newSticker.name} (${newSticker.id})`);
+        logger.info(
+            `[STICKER_UPDATE] Name: ${newSticker.name} ID: ${newSticker.id}`,
+        );
 
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)

@@ -19,17 +19,19 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[GUILD_BAN_ADD] ${ban.user.tag} (${ban.user.id})`);
+        logger.info(
+            `[BAN_ADD] User: ${ban.user.username} | ID: ${ban.user.id} | Reason: ${ban.reason ?? "No reason provided"}`,
+        );
 
         const section = new SectionBuilder()
             .addTextDisplayComponents(
                 (t) =>
                     t.setContent(
-                        `<:settings:1315248897051983873> **Event**\n\`GUILD_BAN_ADD\``,
+                        `<:settings:1315248897051983873> **Event**\n\`BAN_ADD\``,
                     ),
                 (t) =>
                     t.setContent(
-                        `<:member:1315248772527423551> **User**\n${ban.user} - \`${ban.user.tag}\``,
+                        `<:member:1315248772527423551> **User**\n${ban.user} - \`${ban.user.username}\``,
                     ),
                 (t) =>
                     t.setContent(

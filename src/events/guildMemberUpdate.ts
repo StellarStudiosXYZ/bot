@@ -59,7 +59,9 @@ export default {
 
         if (!changes.length) return;
 
-        logger.info(`[MEMBER_UPDATE] ${newMember.user.tag} (${newMember.id})`);
+        logger.info(
+            `[MEMBER_UPDATE] User: ${newMember.user.username} | ID: ${newMember.id}`,
+        );
 
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)

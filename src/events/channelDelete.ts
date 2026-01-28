@@ -20,7 +20,9 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[CHANNEL_DELETE] ${channel.name} (${channel.id})`);
+        logger.info(
+            `[CHANNEL_DELETE] Name: ${channel.name} | ID: ${channel.id}`,
+        );
 
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)

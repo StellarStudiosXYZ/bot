@@ -19,7 +19,7 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[ROLE_DELETE] ${role.name} (${role.id})`);
+        logger.info(`[ROLE_DELETE] Name: ${role.name} | ID: ${role.id}`);
 
         const section = new SectionBuilder()
             .addTextDisplayComponents(

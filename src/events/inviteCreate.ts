@@ -20,7 +20,7 @@ export default {
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
         logger.info(
-            `[INVITE_CREATE] Code: ${invite.code} | Creator: ${invite.inviter?.id}`,
+            `[INVITE_CREATE] Code: ${invite.code} | Creator: ${invite.inviter?.username} | ID: ${invite.inviter?.id}`,
         );
 
         const container = new ContainerBuilder()
@@ -38,7 +38,7 @@ export default {
                             ),
                         (t) =>
                             t.setContent(
-                                `**Created By** \n${invite.inviter} - \`${invite.inviter?.username}\``,
+                                `**Creator** \n${invite.inviter} - \`${invite.inviter?.username}\``,
                             ),
                     )
                     .setThumbnailAccessory((th) =>

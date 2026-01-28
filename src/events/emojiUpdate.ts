@@ -20,7 +20,9 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[EMOJI_UPDATE] ${newEmoji.name} (${newEmoji.id})`);
+        logger.info(
+            `[EMOJI_UPDATE] Name: ${newEmoji.name} | ID: ${newEmoji.id}`,
+        );
 
         const container = new ContainerBuilder()
             .setAccentColor(0x7040ff)

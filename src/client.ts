@@ -10,6 +10,7 @@ export const client = new Client({
         GatewayIntentBits.GuildInvites,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildExpressions,
+        GatewayIntentBits.GuildPresences,
     ],
     partials: [Partials.Channel, Partials.Message, Partials.Reaction],
 });

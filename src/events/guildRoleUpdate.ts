@@ -57,7 +57,7 @@ export default {
 
         if (changes.length === 0) return;
 
-        logger.info(`[ROLE_UPDATE] ${newRole.name} (${newRole.id})`);
+        logger.info(`[ROLE_UPDATE] Name: ${newRole.name} | ID: ${newRole.id}`);
 
         const section = new SectionBuilder()
             .addTextDisplayComponents(

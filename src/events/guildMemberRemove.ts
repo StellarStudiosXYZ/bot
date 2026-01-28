@@ -8,6 +8,7 @@ import {
     TimestampStyles,
 } from "discord.js";
 import { env } from "@/config/env";
+import { logger } from "@/utils/logger";
 
 export default {
     name: Events.GuildMemberRemove,
@@ -17,6 +18,9 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
+        logger.info(
+            `[MEMBER_LEAVE] Username: ${member.user.username} | ID: ${member.id}`,
+        );
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)
             .addSectionComponents(
@@ -28,7 +32,7 @@ export default {
                             ),
                         (t) =>
                             t.setContent(
-                                `<:member:1315248772527423551> **User**\n<@${member.id}> ${member.user.username}`,
+                                `<:member:1315248772527423551> **User**\n<@${member.id}> - \`${member.user.username}\``,
                             ),
                     )
                     .setThumbnailAccessory((th) =>

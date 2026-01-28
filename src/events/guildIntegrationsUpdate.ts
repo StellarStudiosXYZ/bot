@@ -16,7 +16,9 @@ export default {
         const logsChannel = guild.channels.cache.get(env.SERVER_LOGS_CHANNEL);
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[INTEGRATIONS_UPDATE] ${guild.name}`);
+        logger.info(
+            `[INTEGRATIONS_UPDATE] An integration (Bot, Webhook, or App) was updated.`,
+        );
 
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)

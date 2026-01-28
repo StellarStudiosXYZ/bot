@@ -20,7 +20,9 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[STICKER_CREATE] ${sticker.name} (${sticker.id})`);
+        logger.info(
+            `[STICKER_CREATE] Name: ${sticker.name} | ID: ${sticker.id}`,
+        );
 
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)

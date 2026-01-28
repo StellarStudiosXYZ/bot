@@ -22,7 +22,7 @@ export default {
 
         const author = message.author ?? message.member?.user ?? null;
         const authorId = author?.id ?? null;
-        const authorMention = authorId ? `<@${authorId}>` : "`Unknown`";
+        const authorMention = authorId ? `<@${authorId}>` : "`unknown`";
 
         const content =
             message.content && message.content.trim().length

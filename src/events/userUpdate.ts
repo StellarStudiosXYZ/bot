@@ -23,13 +23,13 @@ export default {
 
         if (oldUser.globalName !== newUser.globalName) {
             changes.push(
-                `**Global Name**\n\`${oldUser.globalName ?? "None"}\` → \`${newUser.globalName ?? "None"}\``,
+                `**Name**\n\`${oldUser.globalName ?? "None"}\` → \`${newUser.globalName ?? "None"}\``,
             );
         }
 
         if (oldUser.avatar !== newUser.avatar) {
             changes.push(
-                `**Avatar Changed**\n[New Avatar URL](${newUser.displayAvatarURL()})`,
+                `**Avatar**\n[Old Avatar URL](${oldUser.displayAvatarURL()})\n**Avatar**\n[New Avatar URL](${newUser.displayAvatarURL()})`,
             );
         }
 
@@ -45,7 +45,9 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[USER_UPDATE] ${newUser.tag} (${newUser.id})`);
+        logger.info(
+            `[USER_UPDATE] User: ${newUser.username} ID: ${newUser.id}`,
+        );
 
         const section = new SectionBuilder()
             .addTextDisplayComponents(
@@ -55,7 +57,7 @@ export default {
                     ),
                 (t) =>
                     t.setContent(
-                        `<:member:1315248772527423551> **User**\n${newUser}`,
+                        `<:member:1315248772527423551> **User**\n${newUser} - \`${newUser.username}\``,
                     ),
             )
             .setThumbnailAccessory((th) =>

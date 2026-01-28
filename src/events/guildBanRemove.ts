@@ -19,17 +19,19 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[GUILD_BAN_REMOVE] ${ban.user.tag} (${ban.user.id})`);
+        logger.info(
+            `[BAN_REMOVE] User: ${ban.user.username} | ID: ${ban.user.id}`,
+        );
 
         const section = new SectionBuilder()
             .addTextDisplayComponents(
                 (t) =>
                     t.setContent(
-                        `<:settings:1315248897051983873> **Event**\n\`GUILD_BAN_REMOVE\``,
+                        `<:settings:1315248897051983873> **Event**\n\`BAN_REMOVE\``,
                     ),
                 (t) =>
                     t.setContent(
-                        `<:member:1315248772527423551> **User**\n${ban.user} - \`${ban.user.tag}\``,
+                        `<:member:1315248772527423551> **User**\n${ban.user} - \`${ban.user.username}\``,
                     ),
             )
             .setThumbnailAccessory((th) =>

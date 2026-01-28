@@ -18,7 +18,7 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[EMOJI_DELETE] ${emoji.name} (${emoji.id})`);
+        logger.info(`[EMOJI_DELETE] Name: ${emoji.name} | ID: ${emoji.id}`);
 
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)

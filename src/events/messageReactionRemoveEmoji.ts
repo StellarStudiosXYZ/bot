@@ -4,6 +4,8 @@ import {
     ContainerBuilder,
     SectionBuilder,
     MessageFlags,
+    time,
+    TimestampStyles,
 } from "discord.js";
 import { env } from "@/config/env";
 import { logger } from "@/utils/logger";
@@ -16,7 +18,7 @@ export default {
         );
         if (!logsChannel || !logsChannel.isTextBased()) return;
 
-        logger.info(`[REACTION_EMOJI_REMOVE] ${reaction.emoji.id}`);
+        logger.info(`[REACTION_EMOJI_REMOVE] Message: ${reaction.message.id}`);
 
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)
@@ -38,6 +40,11 @@ export default {
                                 "https://cdn.discordapp.com/embed/avatars/0.png",
                         ),
                     ),
+            )
+            .addTextDisplayComponents((t) =>
+                t.setContent(
+                    `-# ${time(new Date(), TimestampStyles.FullDateShortTime)}`,
+                ),
             );
 
         await logsChannel.send({
