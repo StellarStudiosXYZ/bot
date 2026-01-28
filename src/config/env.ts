@@ -10,13 +10,17 @@ export const env = z
 
         DATABASE_URL: z.string(),
 
-        SOURCEXCHANGE_TOKEN: z.string().optional(),
-        BUILTBYBIT_TOKEN: z.string().optional(),
+        SOURCEXCHANGE_TOKEN: z.string(),
+        BUILTBYBIT_TOKEN: z.string(),
 
         TICKET_CATEGORY: z.string(),
+
+        SERVER_LOGS_CHANNEL: z.string(),
 
         CUSTOMER_ROLE: z.string(),
         SUPPORT_ROLE: z.string(),
         MODERATOR_ROLE: z.string(),
+
+        ACCENT_COLOR: z.string().transform((val) => parseInt(val, 16)),
     })
     .parse(process.env);
