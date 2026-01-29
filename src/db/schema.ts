@@ -7,6 +7,7 @@ import {
     timestamp,
     uniqueIndex,
     index,
+    integer,
 } from "drizzle-orm/pg-core";
 
 export const sourceEnum = pgEnum("source", [
@@ -168,12 +169,13 @@ export const tickets = pgTable(
 export const cases = pgTable(
     "cases",
     {
-        id: varchar("id", { length: 36 }).primaryKey(),
+        id: varchar("id", { length: 8 }).primaryKey(),
         action: caseActionEnum("action").notNull(),
         targetUserId: varchar("target_user_id", { length: 32 }).notNull(),
         moderatorUserId: varchar("moderator_user_id", { length: 32 }).notNull(),
-        reason: text("reason"),
-        duration: numeric("duration"),
+        reason: text("reason").notNull(),
+        attachment: text("attachment"),
+        duration: integer("duration"),
         createdAt: timestamp("created_at").defaultNow().notNull(),
     },
     (c) => [

@@ -2,6 +2,7 @@ import { Events, Interaction } from "discord.js";
 import { commands } from "@/commands";
 import { logger } from "@/utils/logger";
 import { handleProductsButton } from "@/buttons/products";
+import { handleCasesButton } from "@/buttons/cases";
 
 export default {
     name: Events.InteractionCreate,
@@ -20,6 +21,10 @@ export default {
                 switch (namespace) {
                     case "products":
                         await handleProductsButton(interaction);
+                        break;
+
+                    case "cases":
+                        await handleCasesButton(interaction);
                         break;
                 }
             }
