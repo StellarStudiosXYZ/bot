@@ -21,9 +21,11 @@ export async function loadCommands() {
 
     for (const category of categories) {
         const categoryPath = path.join(commandsPath, category);
-        const files = fs
-            .readdirSync(categoryPath)
-            .filter((f) => f.endsWith(".ts"));
+
+        const indexFile = path.join(categoryPath, "index.ts");
+        const files = fs.existsSync(indexFile)
+            ? ["index.ts"]
+            : fs.readdirSync(categoryPath).filter((f) => f.endsWith(".ts"));
 
         for (const file of files) {
             try {

@@ -15,6 +15,7 @@
     "license": "UNLICENSED",
     "packageManager": "pnpm@10.28.1",
     "dependencies": {
+        "discord-html-transcripts": "^3.3.0",
         "discord.js": "^14.25.1",
         "dotenv": "^17.2.3",
         "drizzle-orm": "^0.45.1",

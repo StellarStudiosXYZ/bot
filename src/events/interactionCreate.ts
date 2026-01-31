@@ -3,6 +3,9 @@ import { commands } from "@/commands";
 import { logger } from "@/utils/logger";
 import { handleProductsButton } from "@/buttons/products";
 import { handleCasesButton } from "@/buttons/cases";
+import { handleTicketsButton } from "@/buttons/tickets";
+import { handleTicketCreateModal } from "@/modals/tickets";
+import { errorContainer } from "@/utils/errorContainer";
 
 export default {
     name: Events.InteractionCreate,
@@ -26,6 +29,24 @@ export default {
                     case "cases":
                         await handleCasesButton(interaction);
                         break;
+
+                    case "tickets":
+                        await handleTicketsButton(interaction);
+                        break;
+                }
+            }
+
+            if (interaction.isModalSubmit()) {
+                const [namespace, action] = interaction.customId.split(":");
+
+                switch (namespace) {
+                    case "tickets":
+                        switch (action) {
+                            case "create":
+                                await handleTicketCreateModal(interaction);
+                                break;
+                        }
+                        break;
                 }
             }
         } catch (err) {
@@ -34,7 +55,9 @@ export default {
                 interaction.isRepliable() &&
                 (interaction.deferred || interaction.replied)
             ) {
-                await interaction.editReply("Something went wrong.");
+                await interaction.editReply(
+                    errorContainer("Something went wrong."),
+                );
             }
         }
     },

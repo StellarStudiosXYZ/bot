@@ -15,9 +15,11 @@ export const env = z
 
         TICKET_CATEGORY: z.string(),
 
+        TICKET_CREATION_CHANNEL: z.string(),
+        TRANSCRIPT_DUMPING_CHANNEL: z.string(),
+        TICKET_LOGS_CHANNEL: z.string(),
         DEMO_LOGS_CHANNEL: z.string(),
         SERVER_LOGS_CHANNEL: z.string(),
-        TICKET_LOGS_CHANNEL: z.string(),
 
         MEMBER_ROLE: z.string(),
         CUSTOMER_ROLE: z.string(),

@@ -18,7 +18,11 @@ export const sourceEnum = pgEnum("source", [
 
 export const currencyEnum = pgEnum("currency", ["USD", "EUR"]);
 
-export const ticketStatusEnum = pgEnum("ticket_status", ["OPEN", "CLOSED"]);
+export const ticketStatusEnum = pgEnum("ticket_status", [
+    "OPEN",
+    "CLOSING",
+    "CLOSED",
+]);
 
 export const caseActionEnum = pgEnum("case_action", [
     "WARN",
@@ -26,8 +30,6 @@ export const caseActionEnum = pgEnum("case_action", [
     "KICK",
     "BAN",
     "UNBAN",
-    "LOCK",
-    "UNLOCK",
 ]);
 
 export const softwares = pgTable(
@@ -141,18 +143,10 @@ export const productLicenses = pgTable(
 export const tickets = pgTable(
     "tickets",
     {
-        id: varchar("id", { length: 36 }).primaryKey(),
+        id: varchar("id", { length: 8 }).primaryKey(),
         discordUserId: varchar("discord_user_id", { length: 32 }).notNull(),
         channelId: varchar("channel_id", { length: 32 }).notNull(),
         category: varchar("category", { length: 32 }).notNull(),
-        softwareId: varchar("software_id", { length: 36 }).references(
-            () => softwares.id,
-            { onDelete: "set null" },
-        ),
-        productId: varchar("product_id", { length: 36 }).references(
-            () => products.id,
-            { onDelete: "set null" },
-        ),
         status: ticketStatusEnum("status").default("OPEN").notNull(),
         transcriptUrl: text("transcript_url"),
         createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -162,7 +156,6 @@ export const tickets = pgTable(
         uniqueIndex("tickets_channel_idx").on(t.channelId),
         index("tickets_discord_user_idx").on(t.discordUserId),
         index("tickets_status_idx").on(t.status),
-        index("tickets_software_idx").on(t.softwareId),
     ],
 );
 

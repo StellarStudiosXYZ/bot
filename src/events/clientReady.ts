@@ -6,8 +6,8 @@ export default {
     once: true,
     async execute(client: Client<true>) {
         logger.info(`Logged in as ${client.user.tag} (ID: ${client.user.id})`);
-        client.guilds.cache.forEach(guild => {
-          logger.info(`Server - ${guild.name} (ID: ${guild.id})`);
-        })
+        client.guilds.cache.forEach((guild) => {
+            logger.info(`Server - ${guild.name} (ID: ${guild.id})`);
+        });
     },
 };
