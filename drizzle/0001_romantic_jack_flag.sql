@@ -1,1 +1,0 @@
-DROP INDEX "products_name_idx";

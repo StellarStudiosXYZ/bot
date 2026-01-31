@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1769234050317,
-      "tag": "0000_closed_roughhouse",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1769244807162,
-      "tag": "0001_romantic_jack_flag",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1769245804514,
-      "tag": "0002_cute_garia",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1769355516417,
-      "tag": "0003_zippy_jasper_sitwell",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1769691176497,
-      "tag": "0004_boring_gideon",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1769847366888,
-      "tag": "0005_dusty_blue_marvel",
+      "when": 1769875701984,
+      "tag": "0000_productive_kylun",
       "breakpoints": true
     }
   ]

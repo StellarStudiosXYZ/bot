@@ -35,9 +35,9 @@ export const caseActionEnum = pgEnum("case_action", [
 export const softwares = pgTable(
     "softwares",
     {
-        id: varchar("id", { length: 36 }).primaryKey(),
-        identifier: varchar("identifier", { length: 64 }).notNull(),
-        name: varchar("name", { length: 128 }).notNull(),
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        identifier: varchar("identifier").notNull(),
+        name: varchar("name").notNull(),
         icon: text("icon").notNull(),
         emoji: text("emoji").notNull(),
         createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -51,18 +51,18 @@ export const softwares = pgTable(
 export const products = pgTable(
     "products",
     {
-        id: varchar("id", { length: 36 }).primaryKey(),
-        softwareId: varchar("software_id", { length: 36 })
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        softwareId: integer("software_id")
             .references(() => softwares.id, { onDelete: "cascade" })
             .notNull(),
-        identifier: varchar("identifier", { length: 64 }).notNull(),
-        name: varchar("name", { length: 128 }).notNull(),
-        version: varchar("version", { length: 32 }).notNull(),
+        identifier: varchar("identifier").notNull(),
+        name: varchar("name").notNull(),
+        version: varchar("version").notNull(),
         summary: text("summary").notNull(),
         icon: text("icon").notNull(),
         banner: text("banner").notNull(),
         emoji: text("emoji"),
-        roleId: varchar("role_id", { length: 32 }),
+        roleId: varchar("role_id"),
         createdAt: timestamp("created_at").defaultNow().notNull(),
         updatedAt: timestamp("updated_at").defaultNow().notNull(),
     },
@@ -78,32 +78,38 @@ export const products = pgTable(
 export const productSources = pgTable(
     "product_sources",
     {
-        id: varchar("id", { length: 36 }).primaryKey(),
-        productId: varchar("product_id", { length: 36 })
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        productId: integer("product_id")
             .references(() => products.id, { onDelete: "cascade" })
             .notNull(),
         source: sourceEnum("source").notNull(),
+        sourceProductId: varchar("source_product_id").notNull(),
         price: numeric("price", { precision: 10, scale: 2 }).notNull(),
         currency: currencyEnum("currency").notNull(),
         link: text("link").notNull(),
         createdAt: timestamp("created_at").defaultNow().notNull(),
     },
     (ps) => [
+        uniqueIndex("product_sources_source_pid_idx").on(
+            ps.source,
+            ps.sourceProductId,
+        ),
         uniqueIndex("product_sources_product_source_idx").on(
             ps.productId,
             ps.source,
         ),
+        index("product_sources_product_idx").on(ps.productId),
     ],
 );
 
 export const productChangelogs = pgTable(
     "product_changelogs",
     {
-        id: varchar("id", { length: 36 }).primaryKey(),
-        productId: varchar("product_id", { length: 36 })
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        productId: integer("product_id")
             .references(() => products.id, { onDelete: "cascade" })
             .notNull(),
-        version: varchar("version", { length: 32 }).notNull(),
+        version: varchar("version").notNull(),
         content: text("content").notNull(),
         createdAt: timestamp("created_at").defaultNow().notNull(),
     },
@@ -119,24 +125,25 @@ export const productChangelogs = pgTable(
 export const productLicenses = pgTable(
     "product_licenses",
     {
-        id: varchar("id", { length: 36 }).primaryKey(),
-        discordUserId: varchar("discord_user_id", { length: 32 }).notNull(),
-        productId: varchar("product_id", { length: 36 })
+        id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+        discordUserId: varchar("discord_user_id").notNull(),
+        productId: integer("product_id")
             .references(() => products.id, { onDelete: "cascade" })
             .notNull(),
-        productSourceId: varchar("product_source_id", { length: 36 })
-            .references(() => productSources.id, { onDelete: "cascade" })
-            .notNull(),
-        paymentId: varchar("payment_id", { length: 128 }).notNull(),
+        source: sourceEnum("source").notNull(),
+        sourceProductId: varchar("source_product_id").notNull(),
+        paymentId: varchar("payment_id").notNull(),
         createdAt: timestamp("created_at").defaultNow().notNull(),
     },
     (pl) => [
         uniqueIndex("product_licenses_payment_idx").on(pl.paymentId),
-        uniqueIndex("product_licenses_user_product_source_idx").on(
+        uniqueIndex("product_licenses_user_source_product_idx").on(
             pl.discordUserId,
-            pl.productId,
-            pl.productSourceId,
+            pl.source,
+            pl.sourceProductId,
         ),
+        index("product_licenses_product_idx").on(pl.productId),
+        index("product_licenses_source_idx").on(pl.source),
     ],
 );
 
@@ -144,9 +151,9 @@ export const tickets = pgTable(
     "tickets",
     {
         id: varchar("id", { length: 8 }).primaryKey(),
-        discordUserId: varchar("discord_user_id", { length: 32 }).notNull(),
-        channelId: varchar("channel_id", { length: 32 }).notNull(),
-        category: varchar("category", { length: 32 }).notNull(),
+        discordUserId: varchar("discord_user_id").notNull(),
+        channelId: varchar("channel_id").notNull(),
+        category: varchar("category").notNull(),
         status: ticketStatusEnum("status").default("OPEN").notNull(),
         transcriptUrl: text("transcript_url"),
         createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -164,8 +171,8 @@ export const cases = pgTable(
     {
         id: varchar("id", { length: 8 }).primaryKey(),
         action: caseActionEnum("action").notNull(),
-        targetUserId: varchar("target_user_id", { length: 32 }).notNull(),
-        moderatorUserId: varchar("moderator_user_id", { length: 32 }).notNull(),
+        targetUserId: varchar("target_user_id").notNull(),
+        moderatorUserId: varchar("moderator_user_id").notNull(),
         reason: text("reason").notNull(),
         attachment: text("attachment"),
         duration: integer("duration"),

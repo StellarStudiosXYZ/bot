@@ -1,5 +1,5 @@
 {
-  "id": "7d4a17da-0a34-45b6-8f63-454e85b50e7a",
+  "id": "5979e22a-210a-4196-b55a-9635c09f09e5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "varchar(8)",
           "primaryKey": true,
           "notNull": true
         },
@@ -23,13 +23,13 @@
         },
         "target_user_id": {
           "name": "target_user_id",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "moderator_user_id": {
           "name": "moderator_user_id",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -37,11 +37,17 @@
           "name": "reason",
           "type": "text",
           "primaryKey": false,
+          "notNull": true
+        },
+        "attachment": {
+          "name": "attachment",
+          "type": "text",
+          "primaryKey": false,
           "notNull": false
         },
         "duration": {
           "name": "duration",
-          "type": "numeric",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -113,19 +119,30 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "product_changelogs_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "product_id": {
           "name": "product_id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "version": {
           "name": "version",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -208,31 +225,49 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "product_licenses_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "discord_user_id": {
           "name": "discord_user_id",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "product_id": {
           "name": "product_id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "product_source_id": {
-          "name": "product_source_id",
-          "type": "varchar(36)",
+        "source": {
+          "name": "source",
+          "type": "source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_product_id": {
+          "name": "source_product_id",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "payment_id": {
           "name": "payment_id",
-          "type": "varchar(128)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -260,8 +295,8 @@
           "method": "btree",
           "with": {}
         },
-        "product_licenses_user_product_source_idx": {
-          "name": "product_licenses_user_product_source_idx",
+        "product_licenses_user_source_product_idx": {
+          "name": "product_licenses_user_source_product_idx",
           "columns": [
             {
               "expression": "discord_user_id",
@@ -270,19 +305,49 @@
               "nulls": "last"
             },
             {
-              "expression": "product_id",
+              "expression": "source",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "product_source_id",
+              "expression": "source_product_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
           "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "product_licenses_product_idx": {
+          "name": "product_licenses_product_idx",
+          "columns": [
+            {
+              "expression": "product_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "product_licenses_source_idx": {
+          "name": "product_licenses_source_idx",
+          "columns": [
+            {
+              "expression": "source",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -295,19 +360,6 @@
           "tableTo": "products",
           "columnsFrom": [
             "product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "product_licenses_product_source_id_product_sources_id_fk": {
-          "name": "product_licenses_product_source_id_product_sources_id_fk",
-          "tableFrom": "product_licenses",
-          "tableTo": "product_sources",
-          "columnsFrom": [
-            "product_source_id"
           ],
           "columnsTo": [
             "id"
@@ -328,13 +380,24 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "product_sources_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "product_id": {
           "name": "product_id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -345,18 +408,24 @@
           "primaryKey": false,
           "notNull": true
         },
+        "source_product_id": {
+          "name": "source_product_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "price": {
           "name": "price",
           "type": "numeric(10, 2)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "currency": {
           "name": "currency",
           "type": "currency",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "link": {
           "name": "link",
@@ -373,6 +442,27 @@
         }
       },
       "indexes": {
+        "product_sources_source_pid_idx": {
+          "name": "product_sources_source_pid_idx",
+          "columns": [
+            {
+              "expression": "source",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_product_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "product_sources_product_source_idx": {
           "name": "product_sources_product_source_idx",
           "columns": [
@@ -390,6 +480,21 @@
             }
           ],
           "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "product_sources_product_idx": {
+          "name": "product_sources_product_idx",
+          "columns": [
+            {
+              "expression": "product_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -422,31 +527,42 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "products_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "software_id": {
           "name": "software_id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "identifier": {
           "name": "identifier",
-          "type": "varchar(64)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "name": {
           "name": "name",
-          "type": "varchar(128)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "version": {
           "name": "version",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -460,13 +576,13 @@
           "name": "icon",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "banner": {
           "name": "banner",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "emoji": {
           "name": "emoji",
@@ -476,9 +592,9 @@
         },
         "role_id": {
           "name": "role_id",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -496,41 +612,17 @@
         }
       },
       "indexes": {
-        "products_identifier_idx": {
-          "name": "products_identifier_idx",
+        "products_software_identifier_idx": {
+          "name": "products_software_identifier_idx",
           "columns": [
+            {
+              "expression": "software_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
             {
               "expression": "identifier",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "products_name_idx": {
-          "name": "products_name_idx",
-          "columns": [
-            {
-              "expression": "name",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "products_role_idx": {
-          "name": "products_role_idx",
-          "columns": [
-            {
-              "expression": "role_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -584,19 +676,30 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "softwares_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "identifier": {
           "name": "identifier",
-          "type": "varchar(64)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "name": {
           "name": "name",
-          "type": "varchar(128)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -604,13 +707,13 @@
           "name": "icon",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "emoji": {
           "name": "emoji",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -665,39 +768,27 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(36)",
+          "type": "varchar(8)",
           "primaryKey": true,
           "notNull": true
         },
         "discord_user_id": {
           "name": "discord_user_id",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "channel_id": {
           "name": "channel_id",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "category": {
           "name": "category",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
-        },
-        "software_id": {
-          "name": "software_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "product_id": {
-          "name": "product_id",
-          "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": false
         },
         "status": {
           "name": "status",
@@ -772,51 +863,9 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "tickets_software_idx": {
-          "name": "tickets_software_idx",
-          "columns": [
-            {
-              "expression": "software_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
-      "foreignKeys": {
-        "tickets_software_id_softwares_id_fk": {
-          "name": "tickets_software_id_softwares_id_fk",
-          "tableFrom": "tickets",
-          "tableTo": "softwares",
-          "columnsFrom": [
-            "software_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "tickets_product_id_products_id_fk": {
-          "name": "tickets_product_id_products_id_fk",
-          "tableFrom": "tickets",
-          "tableTo": "products",
-          "columnsFrom": [
-            "product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -833,9 +882,7 @@
         "TIMEOUT",
         "KICK",
         "BAN",
-        "UNBAN",
-        "LOCK",
-        "UNLOCK"
+        "UNBAN"
       ]
     },
     "public.currency": {
@@ -860,6 +907,7 @@
       "schema": "public",
       "values": [
         "OPEN",
+        "CLOSING",
         "CLOSED"
       ]
     }
