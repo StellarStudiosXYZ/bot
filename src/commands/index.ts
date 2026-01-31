@@ -12,7 +12,8 @@ export const commands = new Collection<string, Command>();
 
 export async function loadCommands() {
     const commandsPath = __dirname;
-    let loadedCount = 0;
+    let registeredCount = 0;
+    let executableCount = 0;
 
     const categories = fs
         .readdirSync(commandsPath, { withFileTypes: true })
@@ -40,11 +41,38 @@ export async function loadCommands() {
                 }
 
                 commands.set(command.data.name, command);
-                loadedCount++;
+                registeredCount++;
 
-                logger.info(
-                    `Loaded command: /${command.data.name} (${category})`,
+                const json = command.data.toJSON();
+                const options = json.options ?? [];
+
+                const subcommands = options.filter((o: any) => o.type === 1);
+                const subcommandGroups = options.filter(
+                    (o: any) => o.type === 2,
                 );
+
+                if (subcommands.length === 0 && subcommandGroups.length === 0) {
+                    executableCount++;
+                    logger.info(
+                        `Loaded command: /${command.data.name} (${category})`,
+                    );
+                } else {
+                    for (const sub of subcommands) {
+                        executableCount++;
+                        logger.info(
+                            `Loaded command: /${command.data.name} ${sub.name} (${category})`,
+                        );
+                    }
+
+                    for (const group of subcommandGroups) {
+                        for (const sub of group.options ?? []) {
+                            executableCount++;
+                            logger.info(
+                                `Loaded command: /${command.data.name} ${group.name} ${sub.name} (${category})`,
+                            );
+                        }
+                    }
+                }
             } catch (error) {
                 logger.error(
                     { error, file: `${category}/${file}` },
@@ -54,5 +82,7 @@ export async function loadCommands() {
         }
     }
 
-    logger.info(`Loaded ${loadedCount} commands`);
+    logger.info(
+        `Loaded ${registeredCount} registered commands (${executableCount} usable commands)`,
+    );
 }
