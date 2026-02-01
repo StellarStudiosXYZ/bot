@@ -249,8 +249,8 @@ export async function sourceXchangeModalSubmit(
                             ),
                         (t) =>
                             t.setContent(
-                                `-# You have been granted the <@&${env.CUSTOMER_ROLE}> and <@&${product?.roleId}> roles.\n` +
-                                    `-# Use </product linked:1464885667040460801> to view all your linked products.`,
+                                `-# > You have been granted <@&${env.CUSTOMER_ROLE}> and <@&${product?.roleId}> roles.\n` +
+                                    `-# > Use </product linked:1464885667040460801> to view all your linked products.`,
                             ),
                     )
                     .setThumbnailAccessory((th) =>
