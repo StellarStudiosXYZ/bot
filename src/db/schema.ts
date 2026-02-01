@@ -127,12 +127,14 @@ export const productLicenses = pgTable(
     {
         id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
         discordUserId: varchar("discord_user_id").notNull(),
+        sourceUserId: varchar("source_user_id").notNull(),
         productId: integer("product_id")
             .references(() => products.id, { onDelete: "cascade" })
             .notNull(),
         source: sourceEnum("source").notNull(),
         sourceProductId: varchar("source_product_id").notNull(),
         paymentId: varchar("payment_id").notNull(),
+        purchasedAt: timestamp("purchased_at").notNull(),
         createdAt: timestamp("created_at").defaultNow().notNull(),
     },
     (pl) => [

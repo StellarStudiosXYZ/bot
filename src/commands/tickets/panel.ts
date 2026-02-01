@@ -82,7 +82,7 @@ export async function handleTicketPanel(
                     (t) =>
                         t.setContent(
                             "- **Link your Account**\n" +
-                                `> For faster support please link your purchases by running </sync:1051865976221733014>\n`,
+                                `> For faster support please link your purchases by running </product link:1464885667040460801> command in a channel of your choice.\n`,
                         ),
                 )
                 .setThumbnailAccessory((th) =>

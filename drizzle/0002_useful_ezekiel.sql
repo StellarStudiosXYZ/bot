@@ -1,0 +1,1 @@
+ALTER TABLE "product_licenses" ADD COLUMN "purchased_at" timestamp NOT NULL;

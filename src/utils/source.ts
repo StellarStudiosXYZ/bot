@@ -8,7 +8,7 @@ const SOURCE_META: Record<Source, { label: string; icon: string }> = {
         icon: "<:bbb:1291789674083389531>",
     },
     SOURCEXCHANGE: {
-        label: "SourceXchange",
+        label: "sourceXchange",
         icon: "<:sxc:1291789674687500441>",
     },
     GITHUB: {

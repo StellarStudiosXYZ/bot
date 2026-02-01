@@ -1,0 +1,1 @@
+ALTER TABLE "product_licenses" ADD COLUMN "source_user_id" varchar NOT NULL;

@@ -20,6 +20,7 @@ export const env = z
         TICKET_LOGS_CHANNEL: z.string(),
         DEMO_LOGS_CHANNEL: z.string(),
         SERVER_LOGS_CHANNEL: z.string(),
+        PRODUCT_LINK_LOGS_CHANNEL: z.string(),
 
         MEMBER_ROLE: z.string(),
         CUSTOMER_ROLE: z.string(),
