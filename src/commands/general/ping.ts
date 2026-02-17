@@ -1,10 +1,15 @@
 import {
     SlashCommandBuilder,
     ChatInputCommandInteraction,
-    EmbedBuilder,
+    ContainerBuilder,
+    SectionBuilder,
+    MessageFlags,
+    time,
+    TimestampStyles,
 } from "discord.js";
 import { db } from "@/db";
 import { sql } from "drizzle-orm";
+import { env } from "@/config/env";
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -15,38 +20,42 @@ export const command = {
         const start = Date.now();
         await interaction.deferReply();
 
-        const wsPing = interaction.client.ws.ping;
         const apiLatency = Date.now() - start;
-        let dbLatency: number | string;
 
+        let dbLatency: number | "Unavailable";
         try {
             const dbStart = Date.now();
             await db.execute(sql`select 1`);
             dbLatency = Date.now() - dbStart;
         } catch {
-            dbLatency = "Error";
+            dbLatency = "Unavailable";
         }
 
-        const embed = new EmbedBuilder()
-            .setTitle("🏓 Pong!")
-            .setColor(0x7040ff)
-            .addFields(
-                {
-                    name: "Discord",
-                    value: `${apiLatency}ms`,
-                    inline: true,
-                },
-                {
-                    name: "Database",
-                    value:
-                        typeof dbLatency === "number"
-                            ? `${dbLatency}ms`
-                            : "Unavailable",
-                    inline: true,
-                },
+        const container = new ContainerBuilder()
+            .setAccentColor(env.ACCENT_COLOR)
+            .addSectionComponents(
+                new SectionBuilder().addTextDisplayComponents(
+                    (t) => t.setContent(`🏓 **Pong!**`),
+                    (t) => t.setContent(`**Ping**\n\`${apiLatency}ms\``),
+                    (t) =>
+                        t.setContent(
+                            `**Database**\n\`${
+                                typeof dbLatency === "number"
+                                    ? `${dbLatency}ms`
+                                    : dbLatency
+                            }\``,
+                        ),
+                ),
             )
-            .setTimestamp();
+            .addTextDisplayComponents((t) =>
+                t.setContent(
+                    `-# ${time(new Date(), TimestampStyles.FullDateShortTime)}`,
+                ),
+            );
 
-        await interaction.editReply({ embeds: [embed] });
+        await interaction.editReply({
+            components: [container],
+            flags: MessageFlags.IsComponentsV2,
+        });
     },
 };

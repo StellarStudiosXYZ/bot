@@ -1,20 +1,26 @@
-import { Pool } from "pg";
+import { Client } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "@/db/schema";
 import { env } from "@/config/env";
 import { logger } from "@/utils/logger";
 
-const pool = new Pool({
+const client = new Client({
     connectionString: env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
 });
 
-pool.on("connect", () => {
-    logger.info("Connected to PostgreSQL");
+async function connect() {
+    await client.connect();
+    logger.info("Connected to Database");
+}
+
+connect().catch((err) => {
+    logger.error(err, "Failed to connect to Database");
+    process.exit(1);
 });
 
-pool.on("error", (error) => {
-    logger.error(error, "PostgreSQL pool error");
+client.on("error", (error) => {
+    logger.error(error, "PostgreSQL client error");
 });
 
-export const db = drizzle(pool, { schema });
+export const db = drizzle(client, { schema });
