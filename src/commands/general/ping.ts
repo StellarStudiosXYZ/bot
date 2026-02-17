@@ -34,18 +34,25 @@ export const command = {
         const container = new ContainerBuilder()
             .setAccentColor(env.ACCENT_COLOR)
             .addSectionComponents(
-                new SectionBuilder().addTextDisplayComponents(
-                    (t) => t.setContent(`🏓 **Pong!**`),
-                    (t) => t.setContent(`**Ping**\n\`${apiLatency}ms\``),
-                    (t) =>
-                        t.setContent(
-                            `**Database**\n\`${
-                                typeof dbLatency === "number"
-                                    ? `${dbLatency}ms`
-                                    : dbLatency
-                            }\``,
+                new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (t) => t.setContent(`🏓 **Pong!**`),
+                        (t) => t.setContent(`**Ping**\n\`${apiLatency}ms\``),
+                        (t) =>
+                            t.setContent(
+                                `**Database**\n\`${
+                                    typeof dbLatency === "number"
+                                        ? `${dbLatency}ms`
+                                        : dbLatency
+                                }\``,
+                            ),
+                    )
+                    .setThumbnailAccessory((th) =>
+                        th.setURL(
+                            interaction.guild!.iconURL() ??
+                                "https://cdn.discordapp.com/embed/avatars/0.png",
                         ),
-                ),
+                    ),
             )
             .addTextDisplayComponents((t) =>
                 t.setContent(
