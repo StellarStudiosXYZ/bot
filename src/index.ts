@@ -6,9 +6,9 @@ import { loadCommands } from "@/commands";
 import { deployCommandsIfNeeded } from "@/commands/deploy";
 
 async function bootstrap() {
+    await registerEvents();
     await loadCommands();
     await deployCommandsIfNeeded();
-    await registerEvents();
     await client.login(env.DISCORD_BOT_TOKEN);
 }
 

@@ -11,6 +11,7 @@ import {
     sourceXchangeModalSubmit,
 } from "@/modals/sourcexchange";
 import { handleLinkedButton } from "@/buttons/linked";
+import { handleRpsButton } from "@/buttons/rps";
 
 export default {
     name: Events.InteractionCreate,
@@ -48,6 +49,10 @@ export default {
 
                     case "tickets":
                         await handleTicketsButton(interaction);
+                    break;
+
+                    case "rps":
+                        await handleRpsButton(interaction);
                         break;
                 }
             }

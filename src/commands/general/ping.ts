@@ -37,7 +37,7 @@ export const command = {
                 new SectionBuilder()
                     .addTextDisplayComponents(
                         (t) => t.setContent(`🏓 **Pong!**`),
-                        (t) => t.setContent(`**Ping**\n\`${apiLatency}ms\``),
+                        (t) => t.setContent(`**Discord**\n\`${apiLatency}ms\``),
                         (t) =>
                             t.setContent(
                                 `**Database**\n\`${
