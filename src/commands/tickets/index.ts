@@ -3,6 +3,7 @@ import { handleTicketPanel } from "@/commands/tickets/panel";
 import { handleTicketClose } from "@/commands/tickets/close";
 import { handleTicketAdd } from "@/commands/tickets/add";
 import { handleTicketRemove } from "@/commands/tickets/remove";
+import { handleTicketHistory } from "@/commands/tickets/history";
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -65,6 +66,16 @@ export const command = {
                         .setDescription("Ticket ID")
                         .setRequired(false),
                 ),
+        )
+        .addSubcommand((s) =>
+            s
+                .setName("history")
+                .setDescription("View ticket history")
+                .addUserOption((o) =>
+                    o
+                        .setName("user")
+                        .setDescription("View ticket history for a user"),
+                ),
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
@@ -84,6 +95,10 @@ export const command = {
 
         if (sub === "remove") {
             return handleTicketRemove(interaction);
+        }
+
+        if (sub === "history") {
+            return handleTicketHistory(interaction);
         }
     },
 };

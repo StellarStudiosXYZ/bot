@@ -6,14 +6,18 @@ import {
     ChannelType,
     ButtonBuilder,
     ButtonStyle,
+    SectionBuilder,
+    time,
+    TimestampStyles,
 } from "discord.js";
 import { db } from "@/db";
 import { tickets } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc, count } from "drizzle-orm";
 import { env } from "@/config/env";
 import { errorContainer } from "@/utils/errorContainer";
 import { buildTicketCreateModal } from "@/modals/tickets";
 import { closeTicket } from "@/services/tickets/closeTicket";
+import { buildPaginationRow } from "@/utils/pagination";
 
 export async function handleTicketsButton(interaction: ButtonInteraction) {
     if (interaction.customId === "tickets:create") {
@@ -114,6 +118,95 @@ export async function handleTicketsButton(interaction: ButtonInteraction) {
             ticket: ticket,
             actor: interaction.user,
             client: interaction.client,
+        });
+    }
+
+    if (interaction.customId.startsWith("tickets:history:")) {
+        await interaction.deferUpdate();
+
+        const [, , , pageStr] = interaction.customId.split(":");
+        const page = Math.max(1, Number(pageStr) || 1);
+
+        const footer = interaction.message.components
+            .flatMap((r: any) => r.components)
+            .find((c: any) => c.content?.startsWith("-# User ID:"));
+
+        const userId = footer?.content?.replace("-# User ID:", "").trim();
+        if (!userId) return;
+
+        const offset = (page - 1) * 1;
+
+        const total = await db
+            .select({ count: count(tickets.id) })
+            .from(tickets)
+            .where(eq(tickets.discordUserId, userId))
+            .then((r) => r[0].count);
+
+        const [ticket] = await db
+            .select()
+            .from(tickets)
+            .where(eq(tickets.discordUserId, userId))
+            .orderBy(desc(tickets.createdAt))
+            .limit(1)
+            .offset(offset);
+
+        if (!ticket) return;
+
+        const container = new ContainerBuilder()
+            .setAccentColor(env.ACCENT_COLOR)
+            .addSectionComponents(
+                new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (t) =>
+                            t.setContent(
+                                `## <:mailopen:1467092687042773076> Ticket History`,
+                            ),
+                        (t) =>
+                            t.setContent(
+                                `<:channel:1315248776398766161> **Ticket ID**\n\`${ticket.id}\`\n` +
+                                    `<:folder:1476101710916354252> **Category**\n\`${ticket.category}\`\n` +
+                                    `<:focus:1476101713130815649> **Status**\n\`${ticket.status}\``,
+                            ),
+                        (t) =>
+                            t.setContent(
+                                `\`⏱️\` **Created**\n${time(
+                                    ticket.createdAt,
+                                    TimestampStyles.FullDateShortTime,
+                                )}\n` +
+                                    (ticket.closedAt
+                                        ? `\`🔒\` **Closed**\n${time(
+                                              ticket.closedAt,
+                                              TimestampStyles.FullDateShortTime,
+                                          )}\n`
+                                        : "") +
+                                    (ticket.status === "OPEN"
+                                        ? `<:link:1467155398942396581> **Channel**\n<#${ticket.channelId}>\n`
+                                        : "") +
+                                    (ticket.transcriptUrl
+                                        ? `<:content:1465235859874910269> **Transcript**\n${ticket.transcriptUrl}`
+                                        : ""),
+                            ),
+                    )
+                    .setThumbnailAccessory((th) =>
+                        th.setURL(
+                            interaction.guild?.iconURL() ??
+                                interaction.user.displayAvatarURL(),
+                        ),
+                    ),
+            )
+            .addTextDisplayComponents((t) =>
+                t.setContent(`-# User ID: ${userId}`),
+            );
+
+        const paginationRow = buildPaginationRow(
+            "tickets:history",
+            page,
+            Math.ceil(total / 1),
+        );
+
+        await interaction.editReply({
+            components: [container, paginationRow],
+            flags: MessageFlags.IsComponentsV2,
         });
     }
 }

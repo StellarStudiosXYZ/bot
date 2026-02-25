@@ -27,9 +27,7 @@ export const command = {
                 .addStringOption((opt) =>
                     opt
                         .setName("id")
-                        .setDescription("Case ID")
-                        .setMinLength(8)
-                        .setMaxLength(8),
+                        .setDescription("Case ID"),
                 )
                 .addUserOption((opt) =>
                     opt
