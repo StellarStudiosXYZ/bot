@@ -5,22 +5,22 @@ import { env } from "@/config/env";
 import { logger } from "@/utils/logger";
 
 const client = new Client({
-    connectionString: env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+  connectionString: env.DATABASE_URL,
+  ssl: env.DATABASE_SSL ? { rejectUnauthorized: false } : false,
 });
 
 async function connect() {
-    await client.connect();
-    logger.info("Connected to Database");
+  await client.connect();
+  logger.info("Connected to Database");
 }
 
 connect().catch((err) => {
-    logger.error(err, "Failed to connect to Database");
-    process.exit(1);
+  logger.error(err, "Failed to connect to Database");
+  process.exit(1);
 });
 
 client.on("error", (error) => {
-    logger.error(error, "PostgreSQL client error");
+  logger.error(error, "PostgreSQL client error");
 });
 
 export const db = drizzle(client, { schema });
