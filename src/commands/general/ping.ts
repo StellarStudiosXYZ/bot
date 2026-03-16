@@ -11,6 +11,23 @@ import { db } from "@/db";
 import { sql } from "drizzle-orm";
 import { env } from "@/config/env";
 
+function formatUptime(ms: number) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const parts: string[] = [];
+
+  if (days) parts.push(`${days}d`);
+  if (hours || days) parts.push(`${hours}h`);
+  if (minutes || hours || days) parts.push(`${minutes}m`);
+  parts.push(`${seconds}s`);
+
+  return parts.join(" ");
+}
+
 export const command = {
   data: new SlashCommandBuilder().setName("ping").setDescription("Ping Pong!"),
 
@@ -24,6 +41,8 @@ export const command = {
     await db.execute(sql`select 1`);
     const database = performance.now() - dbStart;
 
+    const uptime = interaction.client.uptime ?? process.uptime() * 1000;
+
     const container = new ContainerBuilder()
       .setAccentColor(env.ACCENT_COLOR)
       .addSectionComponents(
@@ -34,7 +53,8 @@ export const command = {
               `**User**\n\`${user}ms\`\n` +
                 `**Discord**\n\`${discord}ms\`\n` +
                 `**Websocket**\n\`${websocket}ms\`\n` +
-                `**Database**\n\`${database.toFixed(2)}ms\``,
+                `**Database**\n\`${database.toFixed(2)}ms\`\n` +
+                `**Uptime**\n\`${formatUptime(uptime)}\``,
             ),
           )
           .setThumbnailAccessory((th) =>
