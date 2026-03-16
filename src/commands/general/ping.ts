@@ -17,7 +17,7 @@ export const command = {
   async execute(interaction: ChatInputCommandInteraction) {
     const start = Date.now();
     const discord = Date.now() - interaction.createdTimestamp;
-    const webhook = interaction.client.ws.ping;
+    const websocket = interaction.client.ws.ping;
     await interaction.deferReply();
     const user = Date.now() - start;
     const dbStart = performance.now();
@@ -33,7 +33,7 @@ export const command = {
             t.setContent(
               `**User**\n\`${user}ms\`\n` +
                 `**Discord**\n\`${discord}ms\`\n` +
-                `**Websocket**\n\`${webhook}ms\`\n` +
+                `**Websocket**\n\`${websocket}ms\`\n` +
                 `**Database**\n\`${database.toFixed(2)}ms\``,
             ),
           )
