@@ -183,7 +183,7 @@ export async function closeTicket({
                                         ),
                                     (t) =>
                                         t.setContent(
-                                            `<:member:1315248772527423551> **Creator**\n<@${ticket.discordUserId}> - \`$${ticket.discordUserId}\`\n` +
+                                            `<:member:1315248772527423551> **Creator**\n<@${ticket.discordUserId}> - \`${ticket.discordUserId}\`\n` +
                                                 `<:shield:1466354394563088395> **Closed By**\n${actor} - \`${actor.id}\``,
                                         ),
                                 )
