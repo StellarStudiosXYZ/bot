@@ -26,7 +26,7 @@ export default {
         const newContent = newMessage.content?.trim().slice(0, 1750) || null;
 
         logger.info(
-            `[MESSAGE_DELETE] Message: ${newMessage.id} | User: ${newMessage.author.id} | Channel: ${newMessage.channel.id}`,
+            `[MESSAGE_UPDATE] Message: ${newMessage.id} | User: ${newMessage.author.id} | Channel: ${newMessage.channel.id}`,
         );
 
         const container = new ContainerBuilder()
