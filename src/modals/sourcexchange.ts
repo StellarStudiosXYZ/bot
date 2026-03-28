@@ -50,7 +50,7 @@ export async function sourceXchangeModalSubmit(
         let payment: {
             status: "pending" | "completed";
             remote_id: string;
-            product: { id: number };
+            product_id: number;
             user_id: number;
             created_at: string;
         };
@@ -79,13 +79,13 @@ export async function sourceXchangeModalSubmit(
         const productSource = await db.query.productSources.findFirst({
             where: and(
                 eq(productSources.source, "SOURCEXCHANGE"),
-                eq(productSources.sourceProductId, String(payment.product.id)),
+                eq(productSources.sourceProductId, String(payment.product_id)),
             ),
         });
 
         if (!productSource) {
             logger.warn(
-                `[SOURCEXCHANGE_PRODUCT_LINK] Unregistered Product ID: ${payment.product.id} of transaction ID: ${transactionId} by user: ${interaction.user.username} (${interaction.user.id})`,
+                `[SOURCEXCHANGE_PRODUCT_LINK] Unregistered Product ID: ${payment.product_id} of transaction ID: ${transactionId} by user: ${interaction.user.username} (${interaction.user.id})`,
             );
             return interaction.editReply(
                 errorContainer("This product is not registered with us."),
@@ -173,7 +173,7 @@ export async function sourceXchangeModalSubmit(
             sourceUserId: String(payment.user_id),
             productId: productSource.productId,
             source: "SOURCEXCHANGE",
-            sourceProductId: String(payment.product.id),
+            sourceProductId: String(payment.product_id),
             paymentId: payment.remote_id,
             purchasedAt: new Date(payment.created_at),
         });
