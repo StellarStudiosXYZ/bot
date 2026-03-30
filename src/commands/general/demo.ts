@@ -87,8 +87,24 @@ export const command = {
                                         "https://nebula.stellarstudios.xyz",
                                     ),
                             ),
+                    )
+                    .addSectionComponents((section) =>
+                        section
+                            .addTextDisplayComponents((textDisplay) =>
+                                textDisplay.setContent(
+                                    "-# Our Calagopus Extensions Demo!",
+                                ),
+                            )
+                            .setButtonAccessory((button) =>
+                                button
+                                    .setLabel("Calagopus Demo")
+                                    .setStyle(ButtonStyle.Link)
+                                    .setURL(
+                                        "https://calagopus.stellarstudios.xyz",
+                                    ),
+                            ),
                     ),
-            ],
+          ],
             flags: MessageFlags.IsComponentsV2,
         });
     },
